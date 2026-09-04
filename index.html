@@ -112,5 +112,6 @@ window.joinRadio=async()=>{try{selfDriver=state.drivers.find(x=>x.id==$('#self')
 window.leaveRadio=async()=>{try{if(db&&me)await db.ref(`radio/${ROOM}/members/${me}`).remove()}catch{}listeners.forEach(x=>{try{x[0].off(x[1],x[2])}catch{}});listeners=[];peers.forEach(x=>x.close());peers.clear();audios.forEach(x=>x.remove());audios.clear();if(stream)stream.getTracks().forEach(x=>x.stop());stream=null;me=null};
 render();
 </script>
+<script src="radio-admin-sync.js"></script>
 </body>
 </html>
