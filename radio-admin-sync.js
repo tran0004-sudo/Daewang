@@ -57,4 +57,5 @@ function syncOpenRadio(){
 window.openRadio=syncOpenRadio;
 const rb=document.querySelector('#radioBtn');if(rb)rb.onclick=syncOpenRadio;
 if(loadRadioConfig())ready();
+// sync injection trigger
 })();
