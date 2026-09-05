@@ -1,12 +1,13 @@
 {
-  "name": "대왕레미콘 차량운행 현황판",
+  "name": "대왕레미콘",
   "short_name": "대왕레미콘",
-  "start_url": "./",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#c1272d",
+  "orientation": "portrait-primary",
+  "background_color": "#eef0ee",
   "theme_color": "#c1272d",
-  "description": "대왕레미콘 차량운행 현황판 및 실시간 무전",
+  "description": "대왕레미콘 업무·차량관리 앱",
   "icons": [
     {
       "src": "icons/app-icon.png",
@@ -14,5 +15,10 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "shortcuts": [
+    {"name":"차량관리","short_name":"차량관리","url":"./vehicle.html"},
+    {"name":"현황판","short_name":"현황","url":"./dashboard.html"},
+    {"name":"공지사항","short_name":"공지","url":"./notice.html"}
   ]
 }
