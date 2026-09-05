@@ -1,4 +1,19 @@
 (()=>{
+const AUTO_FIREBASE_CONFIG={
+ apiKey:'AIzaSyDfAUpbzd_tB6Da-6kRedtuz9G5u7Km7E0',
+ databaseURL:'https://daewang-radio-e1370-default-rtdb.asia-southeast1.firebasedatabase.app',
+ projectId:'daewang-radio-e1370',
+ authDomain:'daewang-radio-e1370.firebaseapp.com',
+ appId:'1:56169646168:web:16e5dc67b7acdfa5b1e22d'
+};
+try{
+ const saved=cfg();
+ if(!saved||saved.projectId!==AUTO_FIREBASE_CONFIG.projectId||saved.databaseURL!==AUTO_FIREBASE_CONFIG.databaseURL){
+  localStorage.setItem(CFGKEY,JSON.stringify(AUTO_FIREBASE_CONFIG));
+ }
+}catch(e){
+ try{localStorage.setItem(CFGKEY,JSON.stringify(AUTO_FIREBASE_CONFIG))}catch(_){}
+}
 const SELF_KEY='daewang_radio_self_driver_v3';
 let syncSession=null,syncRef=null,autoBusy=false;
 const esc2=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -34,7 +49,7 @@ window.radioSyncSaveSelf=()=>{
 };
 window.radioSyncManualJoin=()=>{const id=selfId(),d=state.drivers.find(x=>x.id===id);if(!d||!invited(id))return toast('현재 무전 대상이 아닙니다');liveUi(d);window.joinRadio()};
 window.radioSyncStart=async()=>{
- if(!ready())return setup();
+ if(!ready())return toast('Firebase 자동 연결에 실패했습니다. 새로고침 후 다시 시도하세요.');
  const list=state.drivers.filter(d=>d.done);if(!list.length)return toast('무전할 기사를 먼저 체크하세요');
  try{
   const root=rootRef();
@@ -48,14 +63,14 @@ window.radioSyncEnd=async()=>{
  try{const root=rootRef();await root.child('session').set({active:false,endedAt:firebase.database.ServerValue.TIMESTAMP,selected:{}});await Promise.all([root.child('members').remove(),root.child('offers').remove(),root.child('answers').remove(),root.child('cand').remove()]);await leaveRadio();toast('무전방 종료됨')}catch(e){console.error(e);toast('무전방 종료 실패')}
 };
 function syncOpenRadio(){
- if(!ready())return setup();
+ if(!ready())return toast('Firebase 자동 연결에 실패했습니다. 새로고침 후 다시 시도하세요.');
  const checked=state.drivers.filter(d=>d.done),saved=selfId();
  const opts=state.drivers.map(d=>`<option value="${d.id}" ${d.id===saved?'selected':''}>${esc2(d.name)} · ${esc2(d.vno)} (${d.team}조)</option>`).join('');
  const live=syncSession&&syncSession.active?Object.values(syncSession.selected||{}):[];
- openSheet(`<h2>📻 실시간 무전</h2><div class="sub"><b>관리자:</b> 기사 체크 후 무전방 시작.<br><b>기사:</b> 본인 이름을 한 번 저장하면 초대될 때 자동 연동됩니다.</div><div class="warn"><b>관리자 체크 ${checked.length}명</b><br>${checked.map(d=>esc2(d.name)).join(', ')||'체크된 기사 없음'}</div><button class="primary" onclick="radioSyncStart()" ${checked.length?'':'disabled'}>체크 명단으로 무전방 시작</button><button class="ghost" onclick="radioSyncEnd()">현재 무전방 종료</button><div class="field" style="margin-top:16px"><label>이 휴대폰의 기사</label><select id="syncSelf">${opts}</select></div><button class="primary" onclick="radioSyncSaveSelf()">내 기사 저장</button><div class="status" style="margin-top:12px">${live.length?`현재 무전 대상 ${live.length}명 · ${live.map(x=>esc2(x.name)).join(', ')}`:'현재 열린 무전방 없음'}</div><div id="syncInviteBox" style="margin-top:12px"></div><button class="ghost" onclick="setup()">⚙ Firebase 설정</button><button class="ghost" onclick="closeSheet()">닫기</button>`);
+ openSheet(`<h2>📻 실시간 무전</h2><div class="sub"><b>관리자:</b> 기사 체크 후 무전방 시작.<br><b>기사:</b> 본인 이름을 한 번 저장하면 초대될 때 자동 연동됩니다.</div><div class="status" style="margin-bottom:12px">✅ Firebase 자동 설정 완료</div><div class="warn"><b>관리자 체크 ${checked.length}명</b><br>${checked.map(d=>esc2(d.name)).join(', ')||'체크된 기사 없음'}</div><button class="primary" onclick="radioSyncStart()" ${checked.length?'':'disabled'}>체크 명단으로 무전방 시작</button><button class="ghost" onclick="radioSyncEnd()">현재 무전방 종료</button><div class="field" style="margin-top:16px"><label>이 휴대폰의 기사</label><select id="syncSelf">${opts}</select></div><button class="primary" onclick="radioSyncSaveSelf()">내 기사 저장</button><div class="status" style="margin-top:12px">${live.length?`현재 무전 대상 ${live.length}명 · ${live.map(x=>esc2(x.name)).join(', ')}`:'현재 열린 무전방 없음'}</div><div id="syncInviteBox" style="margin-top:12px"></div><button class="ghost" onclick="closeSheet()">닫기</button>`);
  renderInvite();
 }
 window.openRadio=syncOpenRadio;
 const rb=document.querySelector('#radioBtn');if(rb)rb.onclick=syncOpenRadio;
-if(cfg())ready();
+ready();
 })();
