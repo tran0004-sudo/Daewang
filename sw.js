@@ -1,4 +1,4 @@
-const CACHE='daewang-remicon-v2';
+const CACHE='daewang-remicon-v3';
 const ASSETS=[
   './',
   './index.html',
