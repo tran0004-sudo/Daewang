@@ -5,11 +5,12 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": ["standalone"],
   "orientation": "portrait-primary",
   "background_color": "#c1272d",
   "theme_color": "#c1272d",
   "description": "대왕레미콘 업무·차량관리 앱",
+  "prefer_related_applications": false,
   "icons": [
     {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
     {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}
